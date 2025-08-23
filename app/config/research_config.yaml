@@ -1,0 +1,5 @@
+research:
+  research_configs:
+    wiki_flag: true
+    serp_flag: false
+    llama_flag: false

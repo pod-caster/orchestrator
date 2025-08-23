@@ -1,0 +1,6 @@
+
+tones: ["Informative", "Humorous", "Creative", "Conversational", "Inspirational", "Serious"]
+voices: ["Puck", "Leda"]
+modes: ["user", "researcher"]
+
+  

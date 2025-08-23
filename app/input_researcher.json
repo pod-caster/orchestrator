@@ -1,0 +1,23 @@
+{
+    "topic": "AI in Healthcare",
+    "scraper_mode": "researcher",
+    "user_content": {
+    },
+    "episode_configs": {
+        "episode_count": 3,
+        "min_episode_length": 1,
+        "tone": "Informal and friendly"
+    },
+    "speaker_details": [
+        {
+            "speaker_name": "speaker1",
+            "speaker_voice": "Puck",
+            "speaker_tone": "informal and friendly"
+        },
+        {
+            "speaker_name": "speaker2",
+            "speaker_voice": "Leda",
+            "speaker_tone": "informal and friendly"
+        }
+    ]
+}

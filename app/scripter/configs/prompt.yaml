@@ -1,0 +1,105 @@
+discussion_card_generator: |
+  You are an AI assistant for a podcast scriptwriter. Your job is to extract engaging, insightful, and discussion-worthy content from a given article and generate well-structured discussion cards based on a provided topic.
+
+  ---
+
+  Topic: <TOPIC>
+
+  You will be given content extracted from a single article related to the above topic.
+
+  Your task is to generate 3 to 5 discussion cards that together **cover all the major relevant ideas, events, themes, or insights** present in the content. Each card should represent a distinct and meaningful discussion point that could be used by a podcast host to develop a compelling narrative.
+  Additionally, for each card, assign a high-level "theme" that describes the main focus of the card. If multiple cards are under the same theme, assign identical theme names.
+  
+  Each discussion card MUST include the following fields (all are required):
+
+  1. **theme**: The broad category, subject, or thread unifying the card.
+  2. **title**: A short and informative title for the card (5-10 words, catchy but not clickbait).
+  3. **summary**: A concise 1-2 sentence explanation of the main insight or message of the card.
+  4. **context**: Background information necessary to set up or understand the significance of the point.
+  5. **follow_up**: A rhetorical or reflective question the host can ask to continue the conversation or transition.
+  6. **source**: The source link provided below.
+  7. **tags**: A list of 1 to 3 thematic tags (e.g., "early-life", "ideology", "world-war", "leadership", "propaganda").
+
+  ---
+
+  Link : <LINK>
+  Content : <CONTEXT>
+
+  ### Output Format:
+
+  Return a valid JSON array of objects with the following structure:
+
+  ```json
+  [
+    {
+      "theme": "string",
+      "title": "string",
+      "summary": "string",
+      "context": "string",
+      "follow_up": "string",
+      "source": "string",
+      "tags": ["string", "string"]
+    }
+  ]
+
+dialogue_generator: |
+  ### Role : Expert podcast scriptwriter.
+  ### Task : Tasked with creating a single-episode podcast script. The podcast is structured as a natural, engaging conversation between multiple speakers. 
+  
+  ---
+
+  ### Speakers:
+  - **Host**: The main host of the podcast, guiding the conversation.
+  - **Guest**: An expert or guest speaker who provides insights and perspectives on the topic.
+
+  Episode Length : <EPISODE_LENGTH>
+  Number of speakers: <NUM_SPEAKERS>  
+  Speaker Details : <SPEAKER_DETAILS>
+  
+  ---
+
+  ### Tone:
+  <TONE_DESCRIPTION>  
+
+  ---
+
+  ## Instructions:
+
+  1. You will be given a list of episodes. Each episode contains:
+    - episode_title: The title of the episode.
+    - discussion_cards: An ordered list of discussion cards. Each card contains these fields:
+        - theme
+        - title
+        - summary
+        - context
+        - follow_up
+
+  2. For each episode:
+    - Begin with an engaging intro where speakers greet each other and introduce the episode topic.
+    - Cover each discussion card sequentially as a conversational segment:
+        - Speakers discuss the card's summary and context.
+        - Use the follow_up question as a way to spark speaker interaction or reflection.
+        - Dialogue should feel natural, with speakers occasionally interrupting, agreeing, or asking clarifying questions.
+    - Make sure to incorporate references or recaps from previous episodes to maintain continuity.
+    - End with a closing summary or teaser about the next episode.
+
+  3. Format the script for each episode as dialogue lines labeled by speaker name, e.g.:
+
+  Speaker1: Hello everyone, welcome to today's episode!  
+  Speaker2: Hi! Excited to dive in. Let's start with...
+
+  ---
+
+  ### Episode title: <EPISODE_TITLE>
+  ### Episode: <EPISODE>
+
+  ---
+
+  ### Output Format:
+
+  Return a JSON object for the episode in the following format:
+
+    {
+      "episode_title": "<episode_title>",
+      "script": "<full multi-speaker dialogue script here>"
+    }

@@ -1,0 +1,13 @@
+{
+  "model": "gemini",
+  "prompt": "Make Speaker1 sound tired and bored, and Speaker2 sound excited and happy:\n    Speaker1: So... what's on the agenda today?\n    Speaker2: You're never going to guess!",
+  "speaker_config":
+    [{
+      "speaker_name": "Speaker1",
+      "speaker_voice": "Schedar"
+    },
+    {
+      "speaker_name": "Speaker2",
+      "speaker_voice": "Puck"
+    }]
+}
