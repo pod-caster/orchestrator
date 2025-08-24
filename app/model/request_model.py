@@ -16,6 +16,7 @@ class SpeakerDetails(BaseModel):
     speaker_name: str
     speaker_voice: str
     speaker_tone: str
+    is_host: bool
 
 class PodcasterInput(BaseModel):
     topic: str

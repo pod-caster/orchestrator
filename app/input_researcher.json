@@ -12,12 +12,14 @@
         {
             "speaker_name": "speaker1",
             "speaker_voice": "Puck",
-            "speaker_tone": "informal and friendly"
+            "speaker_tone": "informal and friendly",
+            "is_host": true
         },
         {
             "speaker_name": "speaker2",
             "speaker_voice": "Leda",
-            "speaker_tone": "informal and friendly"
+            "speaker_tone": "informal and friendly",
+            "is_host": false
         }
     ]
 }

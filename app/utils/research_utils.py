@@ -23,3 +23,13 @@ def prepare_input_for_research(input_dict):
 
     elif mode == "user":
         raise ValueError("User mode is not supported for the time being.")     
+
+
+
+def get_content_from_research(research_output):
+    status = research_output.get("status")
+    if status != "Success":
+        raise ValueError("Research service failed to fetch content.")
+    
+    content = research_output.get("output", [])
+    return content
