@@ -1,5 +1,7 @@
 import logging
 import yaml
+import hashlib
+import random
 logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -22,4 +24,14 @@ def load_yaml(file_path):
         return None
     
 
+def get_unique_id(topic, user_content_dict):
+    try:
+        user_content_str = str(user_content_dict) if user_content_dict else ""
+        unique_string = f"{topic}_{user_content_str}"
+        unique_id = hashlib.md5(unique_string.encode()).hexdigest()
+        return unique_id
+    
+    except Exception as e:
+        logger.error(f"Error generating unique ID: {e}")
+        return str(random.randint(100000, 999999))
     

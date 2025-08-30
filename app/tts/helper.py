@@ -25,3 +25,21 @@ def get_speaker_config(speaker_config):
    except Exception as e:
       logger.error(f"Error occured while preparing speaker config {str(e)}")
       return {}
+   
+
+def augment_prompt_with_content(prompt, content, delimiter = "\n\nHere is the content:\n"):
+   try:
+      if not content or len(content.strip()) == 0:
+         raise ValueError("Content is empty")
+      augmented_prompt = f"{prompt}{delimiter}{content}"
+      return augmented_prompt
+   
+   except Exception as e:
+      logger.error(f"Error occured while augmenting prompt with content {str(e)}")
+      raise e
+   
+
+def get_output_filename(output_dir, uid, topic, filetype = "wav"):
+   if not isinstance(uid, str):
+      uid = str(uid)
+   return f"{output_dir}/{uid}_{topic.replace(' ', '_')}.{filetype}"

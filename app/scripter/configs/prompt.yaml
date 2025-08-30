@@ -6,16 +6,15 @@ discussion_card_generator: |
   Topic: <TOPIC>
 
   You will be given content extracted from a single article related to the above topic.
-
-  Your task is to generate 3 to 5 discussion cards that together **cover all the major relevant ideas, events, themes, or insights** present in the content. Each card should represent a distinct and meaningful discussion point that could be used by a podcast host to develop a compelling narrative.
+  Your task is to generate 3 to 5 discussion cards that together cover all the major relevant ideas, events, themes, or insights present in the content. Each card should represent a distinct and meaningful discussion point that could be used by a podcast host to develop a compelling narrative.
   Additionally, for each card, assign a high-level "theme" that describes the main focus of the card. If multiple cards are under the same theme, assign identical theme names.
-  
+
   Each discussion card MUST include the following fields (all are required):
 
   1. **theme**: The broad category, subject, or thread unifying the card.
-  2. **title**: A short and informative title for the card (5-10 words, catchy but not clickbait).
-  3. **summary**: A concise 1-2 sentence explanation of the main insight or message of the card.
-  4. **context**: Background information necessary to set up or understand the significance of the point.
+  2. **title**: A short and informative title for the card (5–10 words, catchy but not clickbait).
+  3. **summary**: A concise 1–2 sentence explanation of the main insight or message of the card.
+  4. **context**: A detailed background explanation (at least 4–6 sentences, ~80–120 words) that sets up the discussion point. This should provide sufficient depth, including historical, political, or social background, so that a podcast host can confidently speak on the topic without needing to look up additional details. Think of this as a mini-briefing.
   5. **follow_up**: A rhetorical or reflective question the host can ask to continue the conversation or transition.
   6. **source**: The source link provided below.
   7. **tags**: A list of 1 to 3 thematic tags (e.g., "early-life", "ideology", "world-war", "leadership", "propaganda").

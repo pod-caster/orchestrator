@@ -1,10 +1,11 @@
 from .services.researcher import ResearchService
 from .services.scripter import ScripterService
-from .services.tts import TTSService
+from .services.tts import TTSService, TTSRunner
 from .model.request_model import PodcasterInput
-from .utils.helper import convert_input_to_dict
+from .utils.helper import convert_input_to_dict, get_unique_id
 from .utils.research_utils import prepare_input_for_research, get_content_from_research
 from .utils.scripter_utils import prepare_scripter_configs
+from .utils.tts_utils import prepare_tts_input
 import logging
 logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
 logger = logging.getLogger()
@@ -24,23 +25,43 @@ class Orchestrator:
     
 
     async def run_scripter_service(self, content):
+        
         scripter_input = prepare_scripter_configs(self.request_dict, content)
         scripter_output = await self.scripter_service.run(**scripter_input)
         return scripter_output
         
 
+    async def run_tts_service(self, script_output):
+        # Prepare list of dicts
+        tts_input_list = prepare_tts_input(
+            script_output.get('dialogues', []),
+            self.request_dict.get("speaker_details", [])
+        )
+
+        # Create runner with concurrency limit (say 5 workers)
+        runner = TTSRunner(self.tts_service, max_concurrent=5)
+
+        # Run all TTS calls concurrently
+        tts_output_path_list = await runner.run_all(tts_input_list)
+
+        return tts_output_path_list
+
     async def generate_podcast(self, request: PodcasterInput):
+        
         try:
             logger.info(f"Received request for topic: {request.topic} and mode: {request.scraper_mode}")
             self.request_dict = convert_input_to_dict(request)
             research_output = await self.run_research_service()
+            
             content = get_content_from_research(research_output)
             scripter_output = await self.run_scripter_service(content)
-            
 
-    
+            tts_output_path_lists = await self.run_tts_service(scripter_output)
+            return tts_output_path_lists
+
+
         except Exception as e:
-            logger.error(f"Error in Research Service: {e}")
+            logger.error(f"Error in podcast generation: {e}")
             raise e
 
 

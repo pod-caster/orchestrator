@@ -16,7 +16,7 @@ class GeminiTTS():
         self.model = model
         self.logger = logger
 
-    def generate_two_speaker_audio(self, prompt, speaker1_config, speaker2_config):
+    async def generate_two_speaker_audio(self, prompt, speaker1_config, speaker2_config):
         try:
             self.logger.info(f"Generating multi speaker speech")
             speaker1_name = speaker1_config["speaker_name"]
@@ -61,7 +61,7 @@ class GeminiTTS():
             return {}
         
     
-    def generate_single_speaker_audio(self, prompt, speaker_config):
+    async def generate_single_speaker_audio(self, prompt, speaker_config):
         
         try:
             speaker_voice = speaker_config["voice"]
@@ -87,15 +87,15 @@ class GeminiTTS():
            return None
         
 
-    def text_to_speech(self, content, speaker_config):
+    async def text_to_speech(self, content, speaker_config):
         if self.num_speakers not in [1, 2]:
             raise Exception(f"Currently our Podcast service does not support more than {self.num_speakers} speakers")
         
         elif self.num_speakers == 2:
-            return self.generate_two_speaker_audio(content, speaker_config[0], speaker_config[1])
+            return await self.generate_two_speaker_audio(content, speaker_config[0], speaker_config[1])
         
         else:
-            return self.generate_single_speaker_audio(content, speaker_config)
+            return await self.generate_single_speaker_audio(content, speaker_config)
         
     
         

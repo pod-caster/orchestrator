@@ -28,9 +28,12 @@ class Config(BaseModel):
 
 
 class TTSInput(BaseModel):
+    uid:str
+    topic:str
     model: TTSModel = TTSModel.GEMINI   # default to Gemini
     config: Config = Config()
     prompt: str 
+    content:str
     num_speakers: Optional[int] = 2
     speaker_config: List[SpeakerConfig]
 

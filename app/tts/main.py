@@ -7,7 +7,7 @@ app = FastAPI(title="TTS - Text to Speech API")
 
 @app.post("/tts")
 async def generate_research(request: TTSInput):
-    return generate_text_to_speech(request.prompt, request.config, request.model, request.speaker_config, num_speakers=request.num_speakers)
+    return generate_text_to_speech(request.topic, request.prompt, request.content, request.config, request.model, request.speaker_config, num_speakers=request.num_speakers)
     
 @app.get("/tts_health")
 async def health_check():
