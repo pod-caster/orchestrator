@@ -35,3 +35,7 @@ def get_unique_id(topic, user_content_dict):
         logger.error(f"Error generating unique ID: {e}")
         return str(random.randint(100000, 999999))
     
+
+def prepare_output_json(status, tts_output_path_dict, error_message = ""):
+    return {"status": status, "tts_output_path": tts_output_path_dict, "error_message": error_message}
+        

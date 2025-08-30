@@ -13,7 +13,7 @@ class TTSService:
     async def run(self, uid, topic, script, prompt, model_name, model, speaker_config, num_speakers=2):
         logger.info(f"Running TTS Service with model {model}")
         start = time.time()
-        output = await generate_text_to_speech(
+        output, error = await generate_text_to_speech(
             uid, topic, prompt, script, model_name, model, speaker_config, num_speakers
         )
         end = time.time()
@@ -33,4 +33,6 @@ class TTSRunner:
 
     async def run_all(self, tts_inputs: list[dict]):
         tasks = [asyncio.create_task(self.worker(inp)) for inp in tts_inputs]
-        return await asyncio.gather(*tasks, return_exceptions=True)
+        output = await asyncio.gather(*tasks, return_exceptions=True)
+        output_filtered = [o for o in output if o is not None]
+        return output_filtered

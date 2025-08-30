@@ -14,6 +14,7 @@ async def generate_text_to_speech(uid, topic, prompt, content, model_name, model
     """
     Generate text-to-speech audio from the given TTSInput request.
     """
+    output_file_dict = {}
     try:
         logger.info(f"Received TTS request with model={model}")
 
@@ -43,7 +44,9 @@ async def generate_text_to_speech(uid, topic, prompt, content, model_name, model
             output_filename = helper.get_output_filename(constant.output_dir, uid, topic)
             logger.info(f"Writing output to {output_filename}")
             helper.wave_file(output_filename, response)
-            return output_filename, None
+            output_file_dict['episode_name'] = topic
+            output_file_dict['episode_path'] = output_filename
+            return output_file_dict, None
 
         else:
             logger.error(f"Model {model} not supported yet")

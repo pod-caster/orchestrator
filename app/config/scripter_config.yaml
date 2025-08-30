@@ -1,0 +1,11 @@
+scripter:
+  script_configs:
+    format: podcast
+    length: 30
+    style: informal
+    discussion_card_configs:
+      llm_provider: gemini
+    
+    dialogue_configs:
+      llm_provider: gemini
+      

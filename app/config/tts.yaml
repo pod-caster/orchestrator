@@ -1,0 +1,19 @@
+tts:
+  gemini:
+    prompt: |
+      You are an AI voice actor.
+      Task: Convert the provided script into natural, high-quality audio.
+
+      Episode Title: "{episode_title}"
+      Overall Script Tone: {overall_tone}
+
+      Speakers and Their Tones:
+      {speaker_tones}
+
+      Instructions:
+      Assign distinct, natural-sounding voices to each speaker based on their tone.
+      Keep the overall tone {overall_tone}.
+      Ensure smooth conversational pacing and add natural pauses.
+      Maintain consistency of each speaker's voice throughout the episode.
+
+    model_name: "gemini-2.5-flash-preview-tts"
