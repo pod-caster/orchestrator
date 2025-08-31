@@ -2,7 +2,7 @@ from .services.researcher import ResearchService
 from .services.scripter import ScripterService
 from .services.tts import TTSService, TTSRunner
 from .model.request_model import PodcasterInput
-from .utils.helper import convert_input_to_dict, get_unique_id
+from .utils.helper import convert_input_to_dict, get_unique_id, prepare_output_json
 from .utils.research_utils import prepare_input_for_research, get_content_from_research
 from .utils.scripter_utils import prepare_scripter_configs
 from .utils.tts_utils import prepare_tts_input
@@ -57,12 +57,15 @@ class Orchestrator:
             scripter_output = await self.run_scripter_service(content)
 
             tts_output_path_lists = await self.run_tts_service(scripter_output)
-            return tts_output_path_lists
+
+            output_json = prepare_output_json(tts_output_path_lists)
+            return output_json
 
 
         except Exception as e:
+            output_json = prepare_output_json(tts_output_path_lists, error_message=str(e))
             logger.error(f"Error in podcast generation: {e}")
-            raise e
+            return output_json
 
 
 

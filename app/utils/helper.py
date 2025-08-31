@@ -36,6 +36,11 @@ def get_unique_id(topic, user_content_dict):
         return str(random.randint(100000, 999999))
     
 
-def prepare_output_json(status, tts_output_path_dict, error_message = ""):
+def prepare_output_json(tts_output_path_dict, error_message = ""):
+    if len(tts_output_path_dict) > 0:
+        status = "success"
+    else:
+        status = "failed"
+    
     return {"status": status, "tts_output_path": tts_output_path_dict, "error_message": error_message}
         
