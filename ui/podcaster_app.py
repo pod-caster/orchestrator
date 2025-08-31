@@ -91,18 +91,18 @@ main_col, sidebar = st.columns([3.5, 1], gap="large")
 SPEAKER_PROFILES = {
     "Alice": {"voice": "Leda"},
     "Bob": {"voice": "Puck"},
-    "Charlie": {"voice": "Orpheus"},
-    "David": {"voice": "Arcas"},
-    "Eva": {"voice": "Calliope"},
+    "Charlie": {"voice": "Achernar"},
+    "David": {"voice": "Enceladus"},
+    "Eva": {"voice": "Algieba"},
 }
+speakers = ["Alice", "Bob", "Charlie", "David", "Eva"]
 
 # --------- SIDEBAR ---------
 with sidebar:
     with st.container():
         st.markdown("### 🎤 Speaker & Host Setup")
-        speakers = ["Alice", "Bob", "Charlie", "David", "Eva"]
+        
         host = st.radio("Choose the Host", speakers, key="host_radio")
-
         st.markdown("#### ➕ Add More Speakers")
         speaker_checks = []
         for sp in speakers:
@@ -335,13 +335,17 @@ with main_col:
             print(final_json)
             # Use your function to generate episode WAV metadata
 
-            # orchestrator = Orchestrator()
-            # episode_outputs = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
+            orchestrator = Orchestrator()
+            final_output = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
 
-            episode_outputs = dummy(final_json)
+            episode_outputs = final_output.get('tts_output_path', [])
+            if len(episode_outputs) == 0:
+                st.error(final_output.get('error_message', 'Failed to generate podcast episodes.'))
+
+            # episode_outputs = dummy(final_json)
 
             st.markdown("### 📂 Episodes")
             for epi in episode_outputs:
-                st.markdown(f"**{epi['episode_title']}**")
+                st.markdown(f"**{epi['episode_name']}**")
                 st.audio(epi["episode_path"], format="audio/wav")
 

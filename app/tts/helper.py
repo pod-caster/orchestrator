@@ -1,6 +1,8 @@
 import wave
 import json
 import logging
+import re
+import os
 
 logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
 logger = logging.getLogger()
@@ -39,7 +41,16 @@ def augment_prompt_with_content(prompt, content, delimiter = "\n\nHere is the co
       raise e
    
 
-def get_output_filename(output_dir, uid, topic, filetype = "wav"):
-   if not isinstance(uid, str):
-      uid = str(uid)
-   return f"{output_dir}/{uid}_{topic.replace(' ', '_')}.{filetype}"
+def get_output_filename(output_dir, uid, topic, filetype="wav"):
+    if not isinstance(uid, str):
+        uid = str(uid)
+    
+    # Replace spaces with underscores
+    safe_topic = topic.replace(" ", "_")
+    
+    # Remove/replace characters not allowed in filenames
+    safe_topic = re.sub(r'[\\/*?:"<>|]', "_", safe_topic)
+    
+    # Construct path safely
+    filename = f"{uid}_{safe_topic}.{filetype}"
+    return os.path.join(output_dir, filename)
