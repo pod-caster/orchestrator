@@ -1,3 +1,4 @@
+import os
 from .settings import settings
 from pathlib import Path
 
@@ -18,6 +19,6 @@ default_speaker2_config = {"voice": gemini_speaker2_default_voice}
 
 output_dir = f"{BASE_DIR}/output"
 
-if not output_dir.exists():
-    output_dir.mkdir(parents=True, exist_ok=True)
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 

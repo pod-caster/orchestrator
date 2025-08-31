@@ -31,6 +31,8 @@ def get_speaker_config(speaker_config):
 
 def augment_prompt_with_content(prompt, content, delimiter = "\n\nHere is the content:\n"):
    try:
+      if not isinstance(content, str):
+         raise ValueError("Content must be a string")
       if not content or len(content.strip()) == 0:
          raise ValueError("Content is empty")
       augmented_prompt = f"{prompt}{delimiter}{content}"

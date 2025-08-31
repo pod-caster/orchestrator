@@ -1,5 +1,6 @@
 import sys
 import os
+import constant
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from dummy import dummy
 import streamlit as st
@@ -88,46 +89,43 @@ st.markdown("""
 
 main_col, sidebar = st.columns([3.5, 1], gap="large")
 
-SPEAKER_PROFILES = {
-    "Alice": {"voice": "Leda"},
-    "Bob": {"voice": "Puck"},
-    "Charlie": {"voice": "Achernar"},
-    "David": {"voice": "Enceladus"},
-    "Eva": {"voice": "Algieba"},
-}
-speakers = ["Alice", "Bob", "Charlie", "David", "Eva"]
 
 # --------- SIDEBAR ---------
 with sidebar:
     with st.container():
         st.markdown("### 🎤 Speaker & Host Setup")
         
-        host = st.radio("Choose the Host", speakers, key="host_radio")
-        st.markdown("#### ➕ Add More Speakers")
-        speaker_checks = []
-        for sp in speakers:
-            if sp != host:
-                checked = st.checkbox(f"Include {sp}", key=f"incl_{sp}")
-                speaker_checks.append((sp, checked))
-        guests = [sp for sp, checked in speaker_checks if checked]
-        selected_speakers = [host] + guests
+        host = st.radio("Choose the Host", constant.speakers, key="host_radio")
 
-    AVAILABLE_TONES = [
-        "Informal and friendly",
-        "Professional",
-        "Casual",
-        "Serious",
-        "Warm and conversational",
-        "Deep and calm",
-        "Energetic"
-    ]
+        st.markdown("#### ➕ Add More Speakers")
+        
+        if constant.more_than_one_guest:
+            ############# Multiple Additional Speakers
+            speaker_checks = []
+            for sp in constant.speakers:
+                if sp != host:
+                    checked = st.checkbox(f"Include {sp}", key=f"incl_{sp}")
+                    speaker_checks.append((sp, checked))
+            guests = [sp for sp, checked in speaker_checks if checked]
+            selected_speakers = [host] + guests
+        else :
+            ############# Single Additional Speaker
+            additional_speaker = st.radio(
+                "Choose one guest speaker",
+                options=[sp for sp in constant.speakers if sp != host],
+                index=0,
+                key="additional_speaker_radio"
+            )
+            guests = [additional_speaker] if additional_speaker else []
+            selected_speakers = [host] + guests
+
 
     st.markdown("#### 🎼 Select Speaker Tones")
     speaker_tones = {}
     for sp in selected_speakers:
         speaker_tones[sp] = st.selectbox(
             f"Select tone for {sp}",
-            AVAILABLE_TONES,
+            constant.SPEAKER_TONES,
             index=0,
             key=f"tone_{sp}"
         )
@@ -288,7 +286,7 @@ with main_col:
         with col_tone:
             tone = st.selectbox(
                 "**Select Episode Tone**",
-                ["Informal and friendly", "Professional", "Casual", "Serious"],
+                constant.episode_tones,
                 index=0,
                 key="episode_tone"
             )
@@ -302,7 +300,6 @@ with main_col:
         elif (content_mode == "Use my own content") and not (st.session_state.links or st.session_state.pasted_texts):
             st.error("Provide at least links or some supporting text.")
         else:
-            st.success("Podcast generated! See your episodes below.")
             # Build JSON output
             mode = "user" if content_mode == "Use my own content" else "researcher"
             user_content = {
@@ -317,7 +314,7 @@ with main_col:
 
             speaker_details = []
             for sp in selected_speakers:
-                profile = SPEAKER_PROFILES.get(sp, {"voice": "Unknown"})
+                profile = constant.SPEAKER_PROFILES.get(sp, {"voice": "Unknown"})
                 speaker_details.append({
                     "speaker_name": sp,
                     "is_host": sp == st.session_state["host_radio"],
@@ -335,12 +332,16 @@ with main_col:
             print(final_json)
             # Use your function to generate episode WAV metadata
 
-            orchestrator = Orchestrator()
-            final_output = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
+            with st.spinner('Generating podcast episodes...'):
+                orchestrator = Orchestrator()
+                final_output = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
+                # final_output = dummy(final_json)
 
             episode_outputs = final_output.get('tts_output_path', [])
             if len(episode_outputs) == 0:
                 st.error(final_output.get('error_message', 'Failed to generate podcast episodes.'))
+            else : 
+                st.success("Podcast generated! See your episodes below.")
 
             # episode_outputs = dummy(final_json)
 
