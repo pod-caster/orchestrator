@@ -87,7 +87,7 @@ class URLExtractor:
 
             content_map = await self.extract_batch(urls)
 
-            output = [{"link": url, "content": content_map.get(url)} for url in urls if len(content_map.get(url)) > 0]
+            output = [{"link": url, "content": content_map.get(url)} for url in urls if isinstance(content_map.get(url), str) and len(content_map.get(url)) > 0]
 
         if len(wiki_content) > 0:
             output += wiki_content

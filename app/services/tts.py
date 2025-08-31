@@ -32,6 +32,7 @@ class TTSRunner:
             return await self.tts_service.run(**tts_input)
 
     async def run_all(self, tts_inputs: list[dict]):
+        
         tasks = [asyncio.create_task(self.worker(inp)) for inp in tts_inputs]
         output = await asyncio.gather(*tasks, return_exceptions=True)
         output_filtered = [o for o in output if o is not None]

@@ -1,4 +1,4 @@
 research_configs:
   wiki_flag: true
-  serp_flag: false
+  serp_flag: true
   llama_flag: false
