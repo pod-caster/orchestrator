@@ -41,6 +41,11 @@ async def generate_text_to_speech(uid, topic, prompt, content, model_name, model
                 speaker_config
             )
 
+
+            if response is None or len(response) == 0:
+                logger.error("No audio data received from GeminiTTS")
+                raise ValueError("No audio data received from GeminiTTS")
+
             output_filename = helper.get_output_filename(constant.output_dir, uid, topic)
             logger.info(f"Writing output to {output_filename}")
             helper.wave_file(output_filename, response)
@@ -53,6 +58,6 @@ async def generate_text_to_speech(uid, topic, prompt, content, model_name, model
             raise ValueError(f"Model {model} not implemented")
 
     except Exception as e:
-        logger.error(f"Error occurred while generating text-to-speech: {traceback.format_exc(e)}")
+        logger.error(f"Error occurred while generating text-to-speech: {traceback.format_exc()}")
         return None, str(e)
 
