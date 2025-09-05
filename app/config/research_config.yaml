@@ -2,3 +2,4 @@ research_configs:
   wiki_flag: true
   serp_flag: true
   llama_flag: false
+  crawl4ai: true

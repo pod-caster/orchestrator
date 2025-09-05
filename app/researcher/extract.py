@@ -1,5 +1,5 @@
 import pandas as pd
-from .research.tools.content_extract import URLExtractor
+from .research.tools.content_extract import ScraperManager
 from .research.research_agent import ResearchAgent
 
 import logging
@@ -12,17 +12,19 @@ logger.setLevel(logging.INFO)
 def prepare_output(status, content):
     return {"status": status, "output": content}
 
-async def extract(topic, research_configs):
+async def extract(topic, research_configs, scraper_priority = ["crawl4ai", "newspaper3k", "trafilatura"]):
     try:
         logger.info(f"Starting Content Extraction for topic {topic}")
         researcher = ResearchAgent()
-        url_extractor = URLExtractor()
+        url_extractor = ScraperManager(priority=scraper_priority)
         logger.info(f"Researching about {topic}")
         url_content = await researcher.research(topic, research_configs)
         logger.info(f"Done Researching about {topic}")
 
         logger.info(f"Extracting content from links researched about {topic}")
+    
         extracted_content = await url_extractor.extract_links(url_content)
+    
         logger.info(f"Done extracting content")
 
         status = "Success"
