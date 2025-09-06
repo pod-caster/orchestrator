@@ -37,7 +37,9 @@ class DiscussCardGenerator:
         logger.info("Parsing LLM responses and creating discussion cards")
         
         discussion_cards = [utils.llm_response_parser(i,llm_provider) for i in response_data]
-        
+        discussion_cards = [item for item in discussion_cards if item is not None]
+        if len(discussion_cards) == 0:
+            raise ValueError("No valid discussion cards generated from LLM responses.")
         ## Return a list of DiscussCard objects
         # return [DiscussCardGenerator(**card) for card in discussion_cards]  # Filter out empty responses
         return [item for sublist in discussion_cards for item in sublist]

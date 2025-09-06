@@ -46,8 +46,12 @@ class DialogueGenerator:
         ## parse llm response and create Dialogue objects
         logger.info("Parsing LLM responses and creating dialogues")
         dialogues = [utils.llm_response_parser(i,self.llm_provider) for i in response_data]
-
+        dialogues = [item for item in dialogues if item is not None]
+        if len(dialogues) == 0:
+            raise ValueError("No valid dialogues generated from LLM responses.")
+        
         dialogues = [{**d, "script_tone": self.script_tone, "speaker_details": self.speaker_details} for d in dialogues]
+        
         # return dialogues
         return dialogues
 

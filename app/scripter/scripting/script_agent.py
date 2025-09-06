@@ -24,7 +24,7 @@ class SciptAgent:
         discussion_cards = await dis_cards.generate_discussion_card()
         # Group discussion cards into episodes
         episodes = EpisodeGenerator(discussion_cards, self.script_flags.get('episode_configs', {}))
-        episode_lists, episode_count, total_duration = await episodes.group_cards_by_episode_count()
+        episode_lists, episode_count, total_duration = await episodes.group_cards_by_episode_count_df()
         # Generate dialogues
         dialogue_generator = DialogueGenerator(episode_lists, self.script_flags.get('dialogue_configs', {}))
         dialogues = await dialogue_generator.generate_dialogue()

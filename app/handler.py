@@ -7,6 +7,8 @@ from .utils.research_utils import prepare_input_for_research, get_content_from_r
 from .utils.scripter_utils import prepare_scripter_configs
 from .utils.tts_utils import prepare_tts_input
 import logging
+import traceback
+
 logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -74,7 +76,7 @@ class Orchestrator:
 
         except Exception as e:
             output_json = prepare_output_json(tts_output_path_lists, error_message=str(e))
-            logger.error(f"Error in podcast generation: {e}")
+            logger.error(f"Error in podcast generation: {traceback.format_exc()}")
             return output_json
 
 
