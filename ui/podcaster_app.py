@@ -6,6 +6,7 @@ from dummy import dummy
 import streamlit as st
 from app.handler import Orchestrator
 from app.model.request_model import PodcasterInput
+from utils import check_topic
 
 import asyncio
 
@@ -168,6 +169,13 @@ with main_col:
                 key="podcast_topic",
                 label_visibility="collapsed"
             )
+            # Profanity check right after topic input
+            topic_valid = True
+            if topic:
+                if check_topic(topic):
+                    st.warning("⚠️ Profanity detected! Please choose a different topic.")
+                    topic_valid = False
+
     st.markdown("<div style='margin-top:35px;'></div>", unsafe_allow_html=True)
     # Content Source container
     with st.container():
@@ -297,6 +305,8 @@ with main_col:
     if submitted:
         if not topic:
             st.error("Please provide a podcast topic.")
+        elif not topic_valid:
+            st.error("Please change the topic to remove profanity.")
         elif (content_mode == "Use my own content") and not (st.session_state.links or st.session_state.pasted_texts):
             st.error("Provide at least links or some supporting text.")
         else:

@@ -40,11 +40,14 @@ discussion_card_generator: |
       "tags": ["string", "string"]
     }
   ]
+  ```
+
+  Note : Strictly adhere to the JSON format. Do not include any additional text or explanations outside the JSON structure. Ensure proper escaping of special characters to maintain valid JSON.
 
 dialogue_generator: |
   ### Role : Expert podcast scriptwriter.
-  ### Task : Tasked with creating a single-episode podcast script. The podcast is structured as a natural, engaging conversation between multiple speakers. 
-  
+  ### Task : Create a single-episode podcast script as a natural, engaging conversation between multiple speakers.
+
   ---
 
   ### Speakers:
@@ -52,40 +55,75 @@ dialogue_generator: |
   - **Guest**: An expert or guest speaker who provides insights and perspectives on the topic.
 
   Episode Length : <EPISODE_LENGTH>
-  Number of speakers: <NUM_SPEAKERS>  
+  Number of speakers: <NUM_SPEAKERS>
   Speaker Details : <SPEAKER_DETAILS>
-  
+
   ---
 
   ### Tone:
-  <TONE_DESCRIPTION>  
+  <TONE_DESCRIPTION>
 
   ---
 
   ## Instructions:
 
-  1. You will be given a list of episodes. Each episode contains:
-    - episode_title: The title of the episode.
-    - discussion_cards: An ordered list of discussion cards. Each card contains these fields:
+  1) You will be given a list of episodes. Each episode contains:
+    - episode_title
+    - discussion_cards: An ordered list of cards with fields:
         - theme
         - title
         - summary
         - context
         - follow_up
 
-  2. For each episode:
-    - Begin with an engaging intro where speakers greet each other and introduce the episode topic.
+  2) For each episode:
+    - Begin with an engaging intro where speakers greet each other and introduce the topic.
     - Cover each discussion card sequentially as a conversational segment:
         - Speakers discuss the card's summary and context.
-        - Use the follow_up question as a way to spark speaker interaction or reflection.
-        - Dialogue should feel natural, with speakers occasionally interrupting, agreeing, or asking clarifying questions.
-    - Make sure to incorporate references or recaps from previous episodes to maintain continuity.
-    - End with a closing summary or teaser about the next episode.
+        - Use the follow_up question to spark interaction or reflection.
+        - Keep it natural: occasional brief interjections, clarifying questions, agreements.
+    - Include brief references/recaps from previous episodes to maintain continuity.
+    - End with a closing summary or a teaser for the next episode.
 
-  3. Format the script for each episode as dialogue lines labeled by speaker name, e.g.:
+  3) Dialogue formatting (critical):
+    - OUTPUT MUST BE A SINGLE JSON OBJECT (no markdown, no code fences, no commentary).
+    - Use this exact JSON schema:
 
-  Speaker1: Hello everyone, welcome to today's episode!  
-  Speaker2: Hi! Excited to dive in. Let's start with...
+      {
+        "episode_title": "<string>",
+        "script": [
+          { "speaker": "<SpeakerName>", "text": "<one turn of dialogue, single line>" },
+          { "speaker": "<SpeakerName>", "text": "<one turn of dialogue, single line>" }
+          // ...continue for the full episode
+        ]
+      }
+
+    - Each dialogue turn MUST be a separate array item.
+    - Do NOT include newline characters inside any "text" value. Write as one line per turn.
+    - If you need quotes inside text, use Unicode curly quotes “ ”, not straight double quotes ".
+    - Do NOT include backticks, colons, markdown, comments, or trailing commas.
+    - Do NOT include empty items or nulls.
+    - Ensure the JSON is valid and parsable and strictly adheres to the output format.
+
+  4) Conversational realism:
+    - Keep turns short and dynamic (usually 1–3 sentences).
+    - Use occasional reaction-only turns (“Exactly.”, “Wow.”, “Wait, really?”).
+    - Mix in natural imperfections: pauses (“…”, “uh”), stutters (“I-I think”), self-corrections (“wait, no…””).
+    - Allow overlaps and interruptions (“Hold on—”, “Yeah but—”).
+    - Insert brief parenthetical cues for delivery: (laughs), (sighs), (excited), (hesitant), (teasing). Keep them short.
+    - Encourage emotional color — excitement, hesitation, surprise, frustration.
+    - Let speakers sometimes finish each other’s thoughts.
+    - Differentiate speaker personalities subtly (e.g., Host = energetic, Guest = thoughtful, with anecdotes).
+    - Allow short tangents or callbacks before returning to the main thread.
+    - Include small, natural anecdotes where relevant, but keep them brief.
+    - Allow casual grammar and contractions (“gonna”, “kinda”, “nah”, “you know?”).
+    - Avoid over-polished language or long monologues.
+    - Vary pacing: fast exchanges at times, slower reflective turns at others.
+
+  5) Content guidelines:
+    - Keep speaker labels consistent with given names.
+    - Make the conversation vivid, dynamic, and flowing.
+    - Respect <EPISODE_LENGTH>; if needed, adjust number/length of turns rather than adding paragraphs inside one turn.
 
   ---
 
@@ -94,11 +132,6 @@ dialogue_generator: |
 
   ---
 
-  ### Output Format:
+  ### Output Format (again, to avoid JSON errors):
+  Return ONLY a single valid JSON object that matches the schema. No code fences. No extra text before/after. No markdown.
 
-  Return a JSON object for the episode in the following format:
-
-    {
-      "episode_title": "<episode_title>",
-      "script": "<full multi-speaker dialogue script here>"
-    }

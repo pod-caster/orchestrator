@@ -37,7 +37,8 @@ def prepare_scripter_configs(input_dict, content):
     
     episode_configs = input_dict.get("episode_configs", {})
     speaker_configs = input_dict.get("speaker_details", [])
-    speaker_configs_for_scripter = prepare_speaker_configs_for_scripter(speaker_configs)
+    # speaker_configs_for_scripter = prepare_speaker_configs_for_scripter(speaker_configs)
+    speaker_configs_for_scripter = speaker_configs
     speaker_count = len(speaker_configs)
 
     if speaker_count == 0:
@@ -47,7 +48,7 @@ def prepare_scripter_configs(input_dict, content):
         raise ValueError("Episode configurations are required for scripter service.")
     
     scripter_default_configs = constant.scripter_configs['script_configs'].copy()
-    run_time_scripter_configs['entity_count'] = speaker_count
+    # run_time_scripter_configs['entity_count'] = speaker_count
     scripter_default_configs.update(episode_configs)
     run_time_dialogue_configs['speaker_count'] = speaker_count
     run_time_dialogue_configs['script_tone'] = episode_configs['tone']

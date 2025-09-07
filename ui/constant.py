@@ -1,11 +1,11 @@
 SPEAKER_PROFILES = {
     "Alice": {"voice": "Leda"},
     "Bob": {"voice": "Puck"},
-    "Charlie": {"voice": "Achernar"},
+    "Eva": {"voice": "Achernar"},
     "David": {"voice": "Enceladus"},
-    "Eva": {"voice": "Algieba"},
+    "Rock": {"voice": "Algieba"},
 }
-speakers = ["Alice", "Bob", "Charlie", "David", "Eva"]
+speakers = ["Alice", "Bob", "Eva", "David", "Rock"]
 
 SPEAKER_TONES = [
         "Informal and friendly",

@@ -54,5 +54,5 @@ def get_output_filename(output_dir, uid, topic, filetype="wav"):
     safe_topic = re.sub(r'[\\/*?:"<>|]', "_", safe_topic)
     
     # Construct path safely
-    filename = f"{uid}_{safe_topic}.{filetype}"
+    filename = f"{uid}.{filetype}"
     return os.path.join(output_dir, filename)
