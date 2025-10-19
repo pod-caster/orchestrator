@@ -6,7 +6,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 
-GEMINI_API_KEY = settings.GEMINI_API_KEY
+GEMINI_API_KEY = settings.GEMINI_API_KEY.split(",")[0]
 gemini_model = "gemini-2.5-flash-preview-tts"
 
 

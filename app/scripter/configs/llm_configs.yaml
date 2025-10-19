@@ -2,9 +2,7 @@ openai :
   url: https://api.openai.com/v1/chat/completions
   model: gpt-4o-mini
   temperature: 0.7
-  api_key: [key1, key2, key3]
 gemini:
   url: https://generativelanguage.googleapis.com/v1beta/models/{{model}}:generateContent?key={{api_key}}
   model: gemini-2.5-flash
   temperature: 0.5
-  api_key: [AIzaSyD7Y20FTJThWHRwO8CkFfvlJphcHRetIPI,AIzaSyCtnCJS1ZYZrIMZuie77miGUWBpJFhCPQE]

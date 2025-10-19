@@ -28,8 +28,8 @@ class DialogueGenerator:
             lambda x: f"{int(x*60)//60} min{'s' if int(x*60)//60 != 1 else ''} "
                     f"{int(x*60)%60} sec{'s' if int(x*60)%60 != 1 else ''}"
         )
-        ## Generate prompts for discussion cards
-        logger.info("Generating prompts for discussion cards")
+        ## Generate prompts for Dialogues
+        logger.info("Generating prompts for Dialogues")
         episode_df['prompt'] = episode_df.apply(
             lambda row: prompter.generate_dialogue_prompt(str(row['episode_title']), str(row['cards']), str(row['estimated_minutes']), str(self.speaker_count), str(self.speaker_details), self.script_tone),
             axis=1

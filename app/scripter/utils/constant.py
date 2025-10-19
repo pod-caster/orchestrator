@@ -1,6 +1,12 @@
 import app.scripter.utils.yaml_loader as yaml_loader
+from dotenv import load_dotenv
+import os
 from pathlib import Path
 Base_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv()
+gemini_key = os.getenv("GEMINI_API_KEY")
+openai_key = os.getenv("OPENAI_API_KEY")
 
 # load all configurations from YAML files
 CONFIGS_PATH = Base_DIR / "configs"
@@ -16,13 +22,13 @@ OPENAI_URL = configs.llm_configs["openai"]["url"]
 OPENAI_MODEL = configs.llm_configs["openai"]["model"]
 OPENAI_TEMPERATURE = configs.llm_configs["openai"]["temperature"]
 OPENAI_CONCURRENCY_LIMIT = 2
-OPENAI_API_KEYS = configs.llm_configs["openai"]["api_key"]
+OPENAI_API_KEYS = openai_key.split(",")
 ## Gemini
 GEMINI_URL = configs.llm_configs["gemini"]["url"]
 GEMINI_MODEL = configs.llm_configs["gemini"]["model"]
 GEMINI_TEMPERATURE = configs.llm_configs["gemini"]["temperature"]
 GEMINI_CONCURRENCY_LIMIT = 2
-GEMINI_API_KEYS = configs.llm_configs["gemini"]["api_key"]
+GEMINI_API_KEYS = gemini_key.split(",")
 
 # Miscellaneous constants
 rows_per_key = 1  # Number of rows per API key

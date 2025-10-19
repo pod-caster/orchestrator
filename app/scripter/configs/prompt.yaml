@@ -134,4 +134,12 @@ dialogue_generator: |
 
   ### Output Format (again, to avoid JSON errors):
   Return ONLY a single valid JSON object that matches the schema. No code fences. No extra text before/after. No markdown.
+  {
+    "episode_title": "<string>",
+    "script": [
+      { "speaker": "<SpeakerName>", "text": "<one turn of dialogue, single line>" },
+      { "speaker": "<SpeakerName>", "text": "<one turn of dialogue, single line>" }
+      // ...continue for the full episode
+    ]
+  }
 

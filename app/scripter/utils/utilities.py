@@ -32,6 +32,27 @@ def assign_api_keys_to_rows(df,llm_provider):
 #     except:
 #         return None
 
+def escape_inner_quotes_in_text_fields(json_str: str) -> str:
+    """
+    Escapes unescaped double quotes inside 'text' values in a JSON-like string.
+    Only targets text between "text": " ... "
+    """
+    
+    # Regex to match a "text": "...." block (non-greedy)
+    pattern = r'("text"\s*:\s*")(.*?)(?<!\\)"(?=\s*})'
+
+    def replacer(match):
+        start = match.group(1)  # "text": "
+        text_content = match.group(2)
+
+        # Escape all inner quotes in the text content
+        escaped_text = text_content.replace('"', r'\"')
+        return f'{start}{escaped_text}"'
+
+    # Replace all occurrences
+    fixed_str = re.sub(pattern, replacer, json_str, flags=re.DOTALL)
+    return fixed_str
+
 def llm_response_parser(data, llm_provider):
     """
     Parse JSON output from different LLM providers with error handling
@@ -45,7 +66,7 @@ def llm_response_parser(data, llm_provider):
         else:
             if isinstance(data, list):
                 data = data[0]
-            return data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+            return data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '').replace("```json", "").replace("```", "").replace("\n", "").replace("`", "")
 
     def sanitize(text: str) -> str:
         """Clean common LLM formatting artifacts before json.loads."""
@@ -53,14 +74,13 @@ def llm_response_parser(data, llm_provider):
         # remove markdown fences
         text = text.replace("```json", "").replace("```", "")
         # remove stray newlines and backticks
-        text = text.replace("\n", " ").replace("`", "")
-        # fix trailing commas inside objects/arrays
-        text = re.sub(r",\s*([}\]])", r"\1", text)
+        text = text.replace("\n", "").replace("`", "")
+        # # fix trailing commas inside objects/arrays
+        # text = re.sub(r",\s*([}\]])", r"\1", text)
         return text
-
     raw_text = extract_raw_text(data, llm_provider)
-    cleaned = sanitize(raw_text)
-
+    # cleaned = sanitize(raw_text)
+    cleaned = escape_inner_quotes_in_text_fields(raw_text)
     # --- Attempt 1: direct JSON parse ---
     try:
         return json.loads(cleaned)
