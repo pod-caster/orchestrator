@@ -12,7 +12,7 @@ logger.setLevel(logging.INFO)
 def prepare_output(status, content):
     return {"status": status, "output": content}
 
-async def extract(topic, research_configs, scraper_priority = ["crawl4ai", "newspaper3k", "trafilatura"]):
+async def research_and_extract(topic, research_configs, scraper_priority = ["crawl4ai", "newspaper3k", "trafilatura"]):
     try:
         logger.info(f"Starting Content Extraction for topic {topic}")
         researcher = ResearchAgent()
@@ -27,6 +27,25 @@ async def extract(topic, research_configs, scraper_priority = ["crawl4ai", "news
     
         logger.info(f"Done extracting content")
 
+        status = "Success"
+        output = prepare_output(status, extracted_content)
+
+    except Exception as e:
+        logger.error(f"Error occured while extracting {str(e)}")
+        status = "Failure"
+        extracted_content = []
+        output = prepare_output(status, extracted_content)
+
+    finally:
+        return output
+    
+
+async def scrape(url_list:list[str], scraper_priority = ["crawl4ai", "newspaper3k", "trafilatura"]):
+    try:
+        breakpoint()
+        url_extractor = ScraperManager(priority=scraper_priority)
+        url_list = [{"link": url} for url in url_list]
+        extracted_content = await url_extractor.extract_links({"web_results": url_list})
         status = "Success"
         output = prepare_output(status, extracted_content)
 

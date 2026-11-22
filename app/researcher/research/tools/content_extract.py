@@ -127,7 +127,6 @@ class ScraperManager:
         links = webresults.get("web_results", [])
         wiki_content = webresults.get("wiki_content", [])
         output: List[Dict[str, Optional[str]]] = []
-
         if len(links) == 0 and len(wiki_content) == 0:
             raise ValueError("No links found in web_results")
 

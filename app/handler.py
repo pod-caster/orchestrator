@@ -1,4 +1,4 @@
-from .services.researcher import ResearchService
+from .services.researcher import ResearchService, ScraperService
 from .services.scripter import ScripterService
 from .services.tts import TTSService, TTSRunner
 from .model.request_model import PodcasterInput
@@ -16,6 +16,7 @@ logger.setLevel(logging.INFO)
 class Orchestrator:
     def __init__(self):
         self.research_service = ResearchService()
+        self.scraper_service = ScraperService()
         self.scripter_service = ScripterService()
         self.tts_service = TTSService()
 
@@ -26,13 +27,19 @@ class Orchestrator:
     async def run_research_service(self):
         research_output = {}
         user_content = []
-        research_input, user_content, to_use_research  = prepare_input_for_research(self.request_dict)
+        research_input, user_links, user_content, to_use_research, to_scrape  = prepare_input_for_research(self.request_dict)
         self.set_var('to_use_research', to_use_research)
+        self.set_var('to_scrape', to_scrape)
+
+        if to_scrape:
+            logger.info("Using scraping service to extract content from user uploaded links")
+            scraped_content = await self.scraper_service.run(user_links)
+            return research_output, scraped_content
         if not to_use_research:
             logger.info("Skipping research service as user provided content without links.")
             return research_output, user_content
         else:
-            research_output = await self.research_service.run(**research_input)
+            scraped_content = await self.research_service.run(**research_input)
             return research_output, user_content
     
 

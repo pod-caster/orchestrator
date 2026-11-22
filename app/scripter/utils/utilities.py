@@ -3,7 +3,7 @@ import json
 import logging
 import re
 import ast
-
+import json_repair
 import app.scripter.utils.constant as constant
 
 logging.basicConfig(level=logging.INFO)
@@ -74,10 +74,12 @@ def llm_response_parser(data, llm_provider):
         except json.JSONDecodeError as e2:
             # --- Attempt 3: try Python-safe eval ---
             try:
-                return ast.literal_eval(cleaned)
+                return json_repair.loads(raw_text)
+                
             except Exception as e3:
                 # --- All attempts failed ---
-                logger.error("JSON parsing failed.")
+                logger.error("JSON parsing failed.Trying")
+                breakpoint()
                 logger.error("Raw text: %s", raw_text[:200])
                 logger.error("Errors: %s | %s | %s", e1, e2, e3)
                 return None

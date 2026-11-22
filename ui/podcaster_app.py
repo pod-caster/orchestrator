@@ -7,8 +7,14 @@ import streamlit as st
 from app.handler import Orchestrator
 from app.model.request_model import PodcasterInput
 from utils import check_topic
-
+import nest_asyncio
 import asyncio
+
+import sys
+
+# Fix for Windows Playwright compatibility
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
 st.set_page_config(page_title="Podcaster Studio", layout="wide")
 
@@ -87,7 +93,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
+nest_asyncio.apply()
 main_col, sidebar = st.columns([3.5, 1], gap="large")
 
 
@@ -342,10 +348,25 @@ with main_col:
             print(final_json)
             # Use your function to generate episode WAV metadata
 
+            # with st.spinner('Generating podcast episodes...'):
+            #     orchestrator = Orchestrator()
+            #     final_output = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
+            #     # final_output = dummy(final_json)
+
             with st.spinner('Generating podcast episodes...'):
-                orchestrator = Orchestrator()
-                final_output = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
-                # final_output = dummy(final_json)
+                try:
+                    orchestrator = Orchestrator()
+                    final_output = asyncio.run(orchestrator.generate_podcast(PodcasterInput(**final_json)))
+                except RuntimeError:
+                    # Fallback for nested event loop issues
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    try:
+                        final_output = loop.run_until_complete(
+                            orchestrator.generate_podcast(PodcasterInput(**final_json))
+                        )
+                    finally:
+                        loop.close()
 
             episode_outputs = final_output.get('tts_output_path', [])
             if len(episode_outputs) == 0:
